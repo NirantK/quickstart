@@ -22,7 +22,7 @@ Path.ls = lambda x: list(x.iterdir())
 
 ### indowork
 
-```
+```bash
 export PROJECT="mach-learn"
 gcloud config set project $PROJECT
 export IMAGE_FAMILY="pytorch-latest-gpu" # or "pytorch-latest-cpu" for non-GPU instances
