@@ -257,7 +257,8 @@ gcloud compute ssh $INSTANCE_NAME --project=$PROJECT --zone=$ZONE
 
 # dump a compressed db
 export FNAME="db_archive_$(date +%Y%m%d).archive" #filename
-export PARAMS="--db=default_chat --gzip --archive=$FNAME"
+# export PARAMS="--db=default_chat --gzip --archive=$FNAME"
+export PARAMS="--db=default_chat --collection messages --query {'_tenantId':'nykaa'} --gzip --archive=$FNAME --readPreference secondary"
 mongodump $PARAMS
 
 # actually push to the gcs bucket
