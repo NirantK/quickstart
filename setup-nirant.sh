@@ -4,7 +4,7 @@ git config --global credential.helper "cache --timeout=3600"
 echo "git config done. Starting code & dev env config"
 
 # Setting up my programming basics
-pip install black isort pipreqs
+pip install black isort pipreqs ranger-fm
 
 # vim binding for Jupyter
 # Create required directory in case (optional)
