@@ -32,16 +32,20 @@ export INSTANCE_TYPE="n1-highmem-8"
 export INSTANCE_TYPE="n1-highmem-8"
 gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
 gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
+```
 
-# gcloud compute instances create $INSTANCE_NAME \
-#        --zone=$ZONE \
-#        --image-family=$IMAGE_FAMILY \
-#        --image-project=deeplearning-platform-release \
-#        --maintenance-policy=TERMINATE \
-#        --accelerator="type=nvidia-tesla-v100,count=1" \
-#        --machine-type=$INSTANCE_TYPE \
-#        --boot-disk-size=200GB \
-#        --metadata="install-nvidia-driver=True" \
+## agentplay
+
+```bash
+export PROJECT="mach-learn"
+gcloud config set project $PROJECT
+export IMAGE_FAMILY="pytorch-latest-gpu" # or "pytorch-latest-cpu" for non-GPU instances
+export ZONE="asia-south1-b" # budget: "us-west1-b"
+export INSTANCE_NAME="agentplay"
+export INSTANCE_TYPE="n1-highmem-8"
+export INSTANCE_TYPE="n1-highmem-8"
+gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
+gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
 ```
 
 ## nanda2
@@ -55,18 +59,6 @@ export INSTANCE_NAME="nanda2"
 export INSTANCE_TYPE="n1-highmem-8"
 gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
 gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
-```
-
-## production-throwaway
-```bash
-export PROJECT="verloop-production"
-gcloud config set project $PROJECT
-export IMAGE_FAMILY="pytorch-latest-cpu" # or "pytorch-latest-cpu" for non-GPU instances
-export ZONE="us-central1-f"
-export INSTANCE_NAME="throwaway"
-export INSTANCE_TYPE="n1-highmem-4"
-gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
-gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 9000:localhost:8080
 ```
 
 ## Hindi2vec
