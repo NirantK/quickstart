@@ -1,12 +1,12 @@
 # Quick Wiki, Configs & Scripts
----
+
 
 ```bash
 telepresence --swap-deployment faq-builder --also-proxy=10.13.0.0/16
 python manage.py runserver 0.0.0.0:3000
 ```
 
-#### Starting a new notebook
+## Starting a new notebook
 
 https://towardsdatascience.com/how-to-automatically-import-your-favorite-libraries-into-ipython-or-a-jupyter-notebook-9c69d89aa343
 
@@ -29,7 +29,6 @@ export IMAGE_FAMILY="pytorch-latest-gpu" # or "pytorch-latest-cpu" for non-GPU i
 export ZONE="asia-east1-c" # budget: "us-west1-b"
 export INSTANCE_NAME="indowork"
 export INSTANCE_TYPE="n1-highmem-8"
-export INSTANCE_TYPE="n1-highmem-8"
 gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
 gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
 ```
@@ -43,23 +42,10 @@ export IMAGE_FAMILY="pytorch-latest-gpu" # or "pytorch-latest-cpu" for non-GPU i
 export ZONE="asia-south1-b" # budget: "us-west1-b"
 export INSTANCE_NAME="agentplay"
 export INSTANCE_TYPE="n1-highmem-8"
-export INSTANCE_TYPE="n1-highmem-8"
 gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
 gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
 ```
 
-## nanda2
-
-```bash
-export PROJECT="mach-learn"
-gcloud config set project $PROJECT
-export IMAGE_FAMILY="pytorch-latest-gpu" # or "pytorch-latest-cpu" for non-GPU instances
-export ZONE="asia-south1-b" # budget: "us-west1-b"
-export INSTANCE_NAME="nanda2"
-export INSTANCE_TYPE="n1-highmem-8"
-gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
-gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
-```
 
 ## Hindi2vec
 ```bash
@@ -152,7 +138,7 @@ sudo apt-get install libmysqlclient-dev
 ## ssh directly without gcloud
 ssh -i google_compute_engine -R 52698:localhost:52698 nirant@35.200.194.133
 
-### setting up zsh
+## setting up zsh
 sudo apt install zsh
 chsh -s $(which zsh)
 sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
