@@ -6,6 +6,8 @@ echo "git config done. Starting code & dev env config"
 # Setting up my programming basics
 pip install black isort pipreqs ranger-fm
 
+# conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
+
 # vim binding for Jupyter
 mkdir -p $(jupyter --data-dir)/nbextensions
 # Clone the repository
