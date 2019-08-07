@@ -114,6 +114,10 @@ gsutil cp gs://verloop-production-db-exports/$TARGET_FOLDER/$FNAME gs://verloop-
 export TENANT="milkbasket"
 export FNAME="db_archive_20190624_$TENANT.archive" #filename
 gsutil cp gs://chat-prod-exports/$FNAME .
+
+# restore a compressed db
+export PARAMS="--db=default_chat --gzip --archive=$FNAME"
+mongorestore $PARAMS
 ```
 
 ## ssh and tunnel
