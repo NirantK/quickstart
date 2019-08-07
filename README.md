@@ -111,13 +111,9 @@ gsutil cp gs://verloop-production-db-exports/$TARGET_FOLDER/$FNAME gs://verloop-
 ### Restore Dump
 
 ```bash
-export TARGET_FOLDER="analytics"
-export FNAME="db_archive_$(date +%Y%m%d).archive" #filename
-gsutil cp gs://verloop-prod-db-exports-in-dev/$TARGET_FOLDER/$FNAME .
-
-# restore a compressed db
-export PARAMS="--db=default_chat --gzip --archive=$FNAME"
-mongorestore $PARAMS
+export TENANT="milkbasket"
+export FNAME="db_archive_20190624_$TENANT.archive" #filename
+gsutil cp gs://chat-prod-exports/$FNAME .
 ```
 
 ## ssh and tunnel
