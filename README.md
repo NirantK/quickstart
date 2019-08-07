@@ -20,20 +20,7 @@ from pathlib import Path
 Path.ls = lambda x: list(x.iterdir())
 ```
 
-### indowork
-
-```bash
-export PROJECT="mach-learn"
-gcloud config set project $PROJECT
-export IMAGE_FAMILY="pytorch-latest-gpu" # or "pytorch-latest-cpu" for non-GPU instances
-export ZONE="asia-east1-c" # budget: "us-west1-b"
-export INSTANCE_NAME="indowork"
-export INSTANCE_TYPE="n1-highmem-8"
-gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
-gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
-```
-
-## agentplay
+## smartreply
 
 ```bash
 export PROJECT="mach-learn"
@@ -67,25 +54,7 @@ gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
 gcloud compute instances stop $INSTANCE_NAME --zone=$ZONE
 ```
 
-## lmwork
-```bash
-export PROJECT="mach-learn"
-gcloud config set project $PROJECT
-export IMAGE_FAMILY="pytorch-latest-gpu" # or "pytorch-latest-cpu" for non-GPU instances
-export ZONE="asia-east1-c" # budget: "us-west1-b"
-export INSTANCE_NAME="lmwork"
-export INSTANCE_TYPE="n1-highmem-4"
-gcloud compute instances create $INSTANCE_NAME \
-        --zone=$ZONE \
-        --image-family=$IMAGE_FAMILY \
-        --image-project=deeplearning-platform-release \
-        --maintenance-policy=TERMINATE \
-        --accelerator="type=nvidia-tesla-v100,count=1" \
-        --machine-type=$INSTANCE_TYPE \
-        --boot-disk-size=200GB \
-        --metadata="install-nvidia-driver=True" \
-```
-## Creating the instance
+## Creating the Instance
 
 ```bash
 # budget: 'type=nvidia-tesla-k80,count=1'
@@ -107,6 +76,50 @@ gcloud compute instances create $INSTANCE_NAME \
         # --preemptible
 ```
 
+
+## Mongo Data Exports
+
+```bash
+# ssh into the secondary read replica
+export INSTANCE_NAME="mongodb-chat-node-4"
+export PROJECT="verloop-production"
+export ZONE="us-central1-f"
+gcloud compute ssh $INSTANCE_NAME --project=$PROJECT --zone=$ZONE
+
+# dump a compressed db
+export TENANT="nykaa" #replace nykaa with target tenant
+export FNAME="db_archive_$(date +%Y%m%d)_$TENANT.archive" #filename
+# export PARAMS="--db=default_chat --gzip --archive=$FNAME"
+export PARAMS="--db=default_chat --collection messages --query {'_tenantId':'$TENANT'} --gzip --archive=$FNAME --readPreference secondary"
+mongodump $PARAMS
+
+# actually push to the gcs bucket
+export TARGET_FOLDER="analytics"
+gsutil cp $FNAME gs://verloop-production-db-exports/$TARGET_FOLDER
+```
+
+### Copy dump from Production to Dev Projects
+
+*Important*: Exit to local where you have access to both production and dev
+
+```bash
+export FNAME="db_archive_$(date +%Y%m%d).archive" #filename
+export TARGET_FOLDER="analytics"
+gsutil cp gs://verloop-production-db-exports/$TARGET_FOLDER/$FNAME gs://verloop-prod-db-exports-in-dev/$TARGET_FOLDER/
+```
+
+### Restore Dump
+
+```bash
+export TARGET_FOLDER="analytics"
+export FNAME="db_archive_$(date +%Y%m%d).archive" #filename
+gsutil cp gs://verloop-prod-db-exports-in-dev/$TARGET_FOLDER/$FNAME .
+
+# restore a compressed db
+export PARAMS="--db=default_chat --gzip --archive=$FNAME"
+mongorestore $PARAMS
+```
+
 ## ssh and tunnel
 ```bash
 gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
@@ -119,7 +132,7 @@ sudo /opt/anaconda3/bin/conda install -c fastai fastai
 gcloud compute instances delete $INSTANCE_NAME --zone=$ZONE --delete-disks=all
 ```
 
-## creating a symlink
+## Creating a symlink
 To create a symlink at /usr/bin/bar which references the original file /opt/foo, use:
 ln -s /opt/foo /usr/bin/bar
 
@@ -138,7 +151,7 @@ sudo apt-get install libmysqlclient-dev
 ## ssh directly without gcloud
 ssh -i google_compute_engine -R 52698:localhost:52698 nirant@35.200.194.133
 
-## setting up zsh
+## zsh
 sudo apt install zsh
 chsh -s $(which zsh)
 sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
@@ -165,11 +178,6 @@ python -m spacy download en
 python -m nltk.downloader punkt
 pip install fire
 
-### Mongo Setup 
-Install Mongo from instructions on https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
-Verify that the Mongo shell works by doing:
-$ mongo
-pip install pymongo
 
 ### Known Error
 ```
@@ -220,57 +228,3 @@ https://patrickmn.com/aside/how-to-keep-alive-ssh-sessions/
 -- to paste with proper indenting in Python
 set tabstop=4 shiftwidth=4 expandtab
 
-
-
-## Create-Move-Restore Chat Data Dump
-
-### Make a Data Dump and Push to Google Cloud Storage
-
-```bash
-# ssh into the secondary read replica
-export INSTANCE_NAME="mongodb-chat-node-4"
-export PROJECT="verloop-production"
-export ZONE="us-central1-f"
-gcloud compute ssh $INSTANCE_NAME --project=$PROJECT --zone=$ZONE
-
-# dump a compressed db
-export FNAME="db_archive_$(date +%Y%m%d).archive" #filename
-# export PARAMS="--db=default_chat --gzip --archive=$FNAME"
-export PARAMS="--db=default_chat --collection messages --query {'_tenantId':'nykaa'} --gzip --archive=$FNAME --readPreference secondary"
-mongodump $PARAMS
-
-# actually push to the gcs bucket
-export TARGET_FOLDER="analytics"
-gsutil cp $FNAME gs://verloop-production-db-exports/$TARGET_FOLDER
-```
-
-### Copy dump from Production to Dev Projects
-
-*Important*: Exit to local where you have access to both production and dev
-
-```bash
-export FNAME="db_archive_$(date +%Y%m%d).archive" #filename
-export TARGET_FOLDER="analytics"
-gsutil cp gs://verloop-production-db-exports/$TARGET_FOLDER/$FNAME gs://verloop-prod-db-exports-in-dev/$TARGET_FOLDER/
-```
-
-### Restore Dump
-
-```bash
-export PROJECT "verloop-dev"
-gcloud config set project $PROJECT
-export IMAGE_FAMILY="pytorch-latest-gpu" # or "pytorch-latest-cpu" for non-GPU instances
-export ZONE="us-west2-b" # budget: "us-west1-b"
-export INSTANCE_NAME="experiment"
-export INSTANCE_TYPE="n1-highmem-8"
-gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
-gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
-
-export TARGET_FOLDER="analytics"
-export FNAME="db_archive_$(date +%Y%m%d).archive" #filename
-gsutil cp gs://verloop-prod-db-exports-in-dev/$TARGET_FOLDER/$FNAME .
-
-# restore a compressed db
-export PARAMS="--db=default_chat --gzip --archive=$FNAME"
-mongodump $PARAMS
-```
