@@ -11,12 +11,13 @@ python manage.py runserver 0.0.0.0:3000
 https://towardsdatascience.com/how-to-automatically-import-your-favorite-libraries-into-ipython-or-a-jupyter-notebook-9c69d89aa343
 
 ```python
+import json
+import random
+from pathlib import Path
+from urllib.parse import quote_plus
+
 %load_ext autoreload
 %autoreload 2
-import matplotlib as plt
-import json
-import pandas as pd
-from pathlib import Path
 Path.ls = lambda x: list(x.iterdir())
 ```
 
