@@ -21,19 +21,17 @@ from urllib.parse import quote_plus
 Path.ls = lambda x: list(x.iterdir())
 ```
 
-## smartreply
+## convolib
 
 ```bash
 export PROJECT="mach-learn"
 gcloud config set project $PROJECT
-export IMAGE_FAMILY="pytorch-latest-gpu" # or "pytorch-latest-cpu" for non-GPU instances
 export ZONE="asia-south1-b" # budget: "us-west1-b"
-export INSTANCE_NAME="smartreply"
-export INSTANCE_TYPE="n1-highmem-8"
+export INSTANCE_NAME="convolib"
+export INSTANCE_TYPE="n1-standard-1"
 gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
 gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
 ```
-
 
 ## Hindi2vec
 ```bash
