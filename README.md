@@ -14,11 +14,13 @@ https://towardsdatascience.com/how-to-automatically-import-your-favorite-librari
 import json
 import random
 from pathlib import Path
-from urllib.parse import quote_plus
+
+import pandas as pd
 
 %load_ext autoreload
 %autoreload 2
 Path.ls = lambda x: list(x.iterdir())
+# from urllib.parse import quote_plus
 ```
 
 ## convolib
