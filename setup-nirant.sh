@@ -4,7 +4,7 @@ git config --global credential.helper "cache --timeout=3600"
 echo "git config done. Starting code & dev env config"
 
 # Setting up my programming basics
-pip install black isort pipreqs ranger-fm
+pip install black pipreqs ranger-fm
 
 # conda install pytorch torchvision cudatoolkit=10.0 -c pytorch
 
@@ -18,6 +18,7 @@ jupyter nbextension enable vim_binding/vim_binding
 echo "Enabled: Vim Binding for Jupyter"
 
 # isort for Jupyter
+pip install isort==4.3.21
 pip install jupyter_contrib_nbextensions
 jupyter nbextension install https://github.com/benjaminabel/jupyter-isort/archive/master.zip --user
 jupyter nbextension enable jupyter-isort-master/jupyter-isort
