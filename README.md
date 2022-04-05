@@ -23,16 +23,13 @@ Path.ls = lambda x: list(x.iterdir())
 # from urllib.parse import quote_plus
 ```
 
-## convolib
+## BigQuery
 
-```bash
-export PROJECT="mach-learn"
-gcloud config set project $PROJECT
-export ZONE="asia-south1-b" # budget: "us-west1-b"
-export INSTANCE_NAME="convolib"
-export INSTANCE_TYPE="n1-standard-1"
-gcloud compute instances start $INSTANCE_NAME --zone=$ZONE
-gcloud compute ssh --zone=$ZONE jupyter@$INSTANCE_NAME -- -L 8080:localhost:8080
+```python
+%load_ext google.cloud.bigquery
+%load_ext rich
+from google.cloud import bigquery
+bqclient = bigquery.Client()
 ```
 
 ## Hindi2vec
